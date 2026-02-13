@@ -2,26 +2,450 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Продажа авто в Туве — Telegram</title>
-    <meta name="description" content="Telegram группа продажи автомобилей в Туве. Без спама, только живые объявления.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Tuva | Автомобильный рынок в Telegram</title>
+    <meta name="description" content="🚗 Первый автомобильный Telegram-канал Тувы. Ежедневно свежие объявления, проверенные продавцы, Кызыл и вся республика.">
+    
+    <!-- Подключение Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', system-ui, sans-serif;
+            background: #0a0c0f;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            color: #ffffff;
+        }
+
+        /* Динамичный автомобильный фон с эффектом скорости */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(0, 100, 255, 0.08) 0%, transparent 30%),
+                        radial-gradient(circle at 80% 70%, rgba(255, 100, 0, 0.08) 0%, transparent 35%),
+                        repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 8px);
+            pointer-events: none;
+        }
+
+        /* Анимированные полосы, имитирующие движение */
+        .speed-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .speed-lines span {
+            position: absolute;
+            width: 150px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #22c55e, transparent);
+            opacity: 0.2;
+            animation: speed 4s linear infinite;
+        }
+
+        .speed-lines span:nth-child(1) { top: 15%; left: -150px; animation-delay: 0s; }
+        .speed-lines span:nth-child(2) { top: 45%; left: -150px; animation-delay: 1.2s; width: 200px; opacity: 0.15; background: linear-gradient(90deg, transparent, #3b82f6, transparent); }
+        .speed-lines span:nth-child(3) { top: 75%; left: -150px; animation-delay: 2.5s; width: 180px; opacity: 0.25; }
+        .speed-lines span:nth-child(4) { top: 90%; left: -150px; animation-delay: 0.8s; width: 220px; opacity: 0.1; background: linear-gradient(90deg, transparent, #ef4444, transparent); }
+
+        @keyframes speed {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(200vw); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            width: 90%;
+            margin: 20px;
+            background: rgba(10, 15, 20, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 40px;
+            padding: 50px 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(34, 197, 94, 0.2) inset, 0 0 30px rgba(34, 197, 94, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.9), 0 0 0 2px #22c55e inset, 0 0 50px #22c55e;
+        }
+
+        /* Автомобильная шапка с индикаторами */
+        .car-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #94a3b8;
+            border-bottom: 1px dashed rgba(34, 197, 94, 0.4);
+            padding-bottom: 20px;
+        }
+
+        .car-model {
+            display: flex;
+            gap: 15px;
+        }
+
+        .car-model span {
+            padding: 5px 12px;
+            background: rgba(34, 197, 94, 0.15);
+            border-radius: 30px;
+            border: 1px solid #22c55e40;
+            color: #22c55e;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .speedometer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fbbf24;
+            font-size: 16px;
+            text-shadow: 0 0 8px #fbbf24;
+        }
+
+        .speedometer i {
+            font-size: 20px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+            position: relative;
+        }
+
+        h1::after {
+            content: 'ТЫВА';
+            font-size: 1rem;
+            background: #22c55e;
+            color: black;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 30px;
+            position: absolute;
+            top: -5px;
+            right: 10px;
+            letter-spacing: 1px;
+            -webkit-text-fill-color: black;
+            text-shadow: none;
+            box-shadow: 0 2px 10px #22c55e;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin: 20px auto 30px;
+            max-width: 550px;
+            border-left: 4px solid #22c55e;
+            padding-left: 20px;
+            text-align: left;
+            background: rgba(255,255,255,0.02);
+            border-radius: 0 10px 10px 0;
+        }
+
+        .subtitle i {
+            color: #22c55e;
+            margin-right: 10px;
+        }
+
+        /* Характеристики "автомобиля" */
+        .specs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px 40px;
+            margin: 40px 0 30px;
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.03);
+            padding: 12px 22px;
+            border-radius: 60px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: 0.2s;
+        }
+
+        .spec-item:hover {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .spec-icon {
+            font-size: 26px;
+            color: #22c55e;
+            filter: drop-shadow(0 0 8px #22c55e);
+        }
+
+        .spec-text {
+            font-weight: 600;
+        }
+        .spec-text small {
+            display: block;
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        /* Кнопка как педаль газа */
+        .tg-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: linear-gradient(145deg, #1e1e1e, #0f0f0f);
+            border: 2px solid #22c55e;
+            color: #22c55e;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 22px 50px;
+            border-radius: 60px;
+            margin: 25px 0 15px;
+            letter-spacing: 3px;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 0 #0a3d1e, 0 15px 30px rgba(0,0,0,0.8);
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .tg-button i {
+            font-size: 2.2rem;
+            transition: transform 0.2s;
+            color: #22c55e;
+        }
+
+        .tg-button:hover {
+            background: #22c55e;
+            color: black;
+            box-shadow: 0 5px 0 #0f5c2b, 0 25px 40px #22c55e60;
+            transform: translateY(-5px);
+            border-color: #22c55e;
+        }
+
+        .tg-button:hover i {
+            transform: rotate(15deg) scale(1.1);
+            color: black;
+        }
+
+        .tg-button:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 #0f5c2b, 0 15px 30px black;
+        }
+
+        /* Индикатор "двигатель запущен" */
+        .engine-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #22c55e;
+            margin-bottom: 15px;
+        }
+
+        .engine-status .dot {
+            width: 12px;
+            height: 12px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #22c55e;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Нижняя панель с навигацией */
+        .car-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 45px;
+            color: #4b5563;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 25px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 25px;
+        }
+
+        .stats div {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stats i {
+            color: #22c55e;
+        }
+
+        /* Адаптация */
+        @media (max-width: 500px) {
+            .container {
+                padding: 30px 15px;
+                border-radius: 30px;
+            }
+            .tg-button {
+                font-size: 1.3rem;
+                padding: 18px 25px;
+            }
+            .specs {
+                gap: 15px;
+            }
+            .car-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: start;
+            }
+        }
+
+        /* Декоративный элемент — руль */
+        .steering-wheel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 90px;
+            color: rgba(34, 197, 94, 0.08);
+            transform: rotate(45deg);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .steering-wheel i {
+            filter: drop-shadow(0 0 10px #22c55e);
+        }
+    </style>
 </head>
-<body style="margin:0;font-family:Arial;background:#0f172a;color:white;text-align:center;">
-
-    <div style="padding:60px 20px;">
-        <h1>🚗 Продажа авто в Туве</h1>
-        <p style="font-size:18px;max-width:500px;margin:20px auto;">
-            Свежие объявления, честные продавцы, Кызыл и вся Тува
-        </p>
-
-        <a href="https://t.me/avtorynokkyzyltuva"
-           style="display:inline-block;padding:15px 30px;
-           background:#22c55e;color:#000;
-           font-size:20px;text-decoration:none;
-           border-radius:10px;margin-top:30px;">
-            👉 Вступить в Telegram
-        </a>
+<body>
+    <!-- Динамические линии скорости -->
+    <div class="speed-lines">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
 
+    <!-- Декоративный руль -->
+    <div class="steering-wheel">
+        <i class="fas fa-steering-wheel"></i>
+    </div>
+
+    <div class="container">
+        <!-- Верхняя панель с авто-индикаторами -->
+        <div class="car-header">
+            <div class="car-model">
+                <span>V8 BITURBO</span>
+                <span>4X4</span>
+            </div>
+            <div class="speedometer">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>0-100 ОБЪЯВЛЕНИЙ/ДЕНЬ</span>
+            </div>
+        </div>
+
+        <!-- Заголовок -->
+        <h1>
+            <i class="fas fa-car" style="color: #22c55e; margin-right: 15px; -webkit-text-fill-color: initial;"></i>
+            AUTO TUVA
+        </h1>
+
+        <!-- Описание с иконкой -->
+        <div class="subtitle">
+            <i class="fas fa-map-marker-alt"></i> Кызыл · вся Республика Тыва
+            <br>
+            <span style="font-size: 1rem; display: block; margin-top: 10px; color: #a5b4cb;">
+                <i class="fas fa-check-circle" style="color: #22c55e;"></i> Только живые объявления, без ботов и спама
+            </span>
+        </div>
+
+        <!-- Характеристики автомобильного рынка -->
+        <div class="specs">
+            <div class="spec-item">
+                <i class="fas fa-bolt spec-icon"></i>
+                <div class="spec-text">
+                    500+ <small>объявлений/мес</small>
+                </div>
+            </div>
+            <div class="spec-item">
+                <i class="fas fa-users spec-icon"></i>
+                <div class="spec-text">
+                    3.5K+ <small>подписчиков</small>
+                </div>
+            </div>
+            <div class="spec-item">
+                <i class="fas fa-shield-alt spec-icon"></i>
+                <div class="spec-text">
+                    Проверка <small>честных продавцов</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Статус двигателя (активности) -->
+        <div class="engine-status">
+            <span class="dot"></span>
+            <span>ДВИГАТЕЛЬ ЗАПУЩЕН · СООБЩЕСТВО АКТИВНО</span>
+        </div>
+
+        <!-- Главная кнопка в стиле педали газа / спортивного авто -->
+        <a href="https://t.me/avtorynokkyzyltuva" class="tg-button" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-telegram-plane"></i> НА ГАЗ
+        </a>
+
+        <!-- Нижняя панель с доп. информацией -->
+        <div class="car-footer">
+            <div class="stats">
+                <div><i class="fas fa-car"></i> Любые авто</div>
+                <div><i class="fas fa-hand-holding-usd"></i> Без комиссии</div>
+            </div>
+            <div>
+                <i class="fas fa-clock" style="margin-right: 5px;"></i> 24/7
+            </div>
+        </div>
+    </div>
 </body>
 </html>
